@@ -16,9 +16,9 @@
     }
   ],
   "support": {
-    "source": "https://github.com/rareform/craft-plunk",
-    "docs": "https://github.com/rareform/craft-plunk/blob/main/README.md",
-    "issues": "https://github.com/rareform/craft-plunk/issues"
+    "source": "https://github.com/RareFormLabs/craft-plunk",
+    "docs": "https://github.com/RareFormLabs/craft-plunk/blob/main/README.md",
+    "issues": "https://github.com/RareFormLabs/craft-plunk/issues"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -46,7 +46,7 @@
   "extra": {
     "name": "Plunk",
     "handle": "plunk",
-    "documentationUrl": "https://github.com/rareform/craft-plunk/blob/main/README.md"
+    "documentationUrl": "https://github.com/RareFormLabs/craft-plunk/blob/main/README.md"
   },
   "scripts": {
     "check-cs": "php -d error_reporting=8191 vendor/bin/ecs check --ansi",
