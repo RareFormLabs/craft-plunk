@@ -30,7 +30,7 @@ class PlunkApiTransport extends AbstractApiTransport
 
     public function __construct(
         string $apiKey,
-        string $apiBaseUrl = 'https://api.useplunk.com',
+        string $apiBaseUrl = 'https://next-api.useplunk.com',
         ?HttpClientInterface $client = null,
         ?EventDispatcherInterface $dispatcher = null,
         ?LoggerInterface $logger = null,

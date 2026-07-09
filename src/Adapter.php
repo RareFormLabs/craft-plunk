@@ -17,7 +17,7 @@ use Symfony\Component\Mailer\Transport\AbstractTransport;
  */
 class Adapter extends BaseTransportAdapter
 {
-    public const DEFAULT_API_BASE_URL = 'https://api.useplunk.com';
+    public const DEFAULT_API_BASE_URL = 'https://next-api.useplunk.com';
 
     /**
      * @inheritdoc

@@ -34,7 +34,7 @@ Both settings support Craft environment aliases and environment variables.
 
 ```dotenv
 PLUNK_SECRET_KEY=sk_your_secret_key
-PLUNK_API_BASE_URL=https://api.useplunk.com
+PLUNK_API_BASE_URL=https://next-api.useplunk.com
 ```
 
 Use `$PLUNK_SECRET_KEY` for the **Secret API Key** setting and `$PLUNK_API_BASE_URL` for the **API Base URL** setting.
