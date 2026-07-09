@@ -1,0 +1,22 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.autosuggestField({
+  label: "Secret API Key"|t('plunk'),
+  instructions: "Your Plunk secret API key. The transactional send API requires an sk_* key."|t('plunk'),
+  id: 'apiKey',
+  name: 'apiKey',
+  value: adapter.apiKey,
+  suggestEnvVars: true,
+  errors: adapter.getErrors('apiKey')
+}) }}
+
+{{ forms.autosuggestField({
+  label: "API Base URL"|t('plunk'),
+  instructions: "The Plunk API root URL. Leave as the hosted default, or set this to your self-hosted Plunk API origin."|t('plunk'),
+  id: 'apiBaseUrl',
+  name: 'apiBaseUrl',
+  value: adapter.apiBaseUrl,
+  suggestEnvVars: true,
+  placeholder: 'https://api.useplunk.com',
+  errors: adapter.getErrors('apiBaseUrl')
+}) }}

@@ -1,0 +1,66 @@
+{
+  "name": "rareform/craft-plunk",
+  "description": "Plunk mail adapter for Craft CMS",
+  "type": "craft-plugin",
+  "keywords": [
+    "cms",
+    "craftcms",
+    "plunk",
+    "mailer",
+    "yii2"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Rareform"
+    }
+  ],
+  "support": {
+    "source": "https://github.com/rareform/craft-plunk",
+    "docs": "https://github.com/rareform/craft-plunk/blob/main/README.md",
+    "issues": "https://github.com/rareform/craft-plunk/issues"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": "^8.0.2",
+    "craftcms/cms": "^4.0.0|^5.0.0",
+    "symfony/http-client": "^6.0|^7.0",
+    "symfony/mailer": "^6.0|^7.0"
+  },
+  "require-dev": {
+    "craftcms/ecs": "dev-main",
+    "craftcms/phpstan": "dev-main",
+    "phpunit/phpunit": "^9.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "rareform\\craftplunk\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "rareform\\craftplunk\\tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "name": "Plunk",
+    "handle": "plunk",
+    "documentationUrl": "https://github.com/rareform/craft-plunk/blob/main/README.md"
+  },
+  "scripts": {
+    "check-cs": "php -d error_reporting=8191 vendor/bin/ecs check --ansi",
+    "fix-cs": "php -d error_reporting=8191 vendor/bin/ecs check --ansi --fix",
+    "phpstan": "phpstan --memory-limit=1G",
+    "test": "phpunit"
+  },
+  "config": {
+    "platform": {
+      "php": "8.2.0"
+    },
+    "allow-plugins": {
+      "craftcms/plugin-installer": true,
+      "yiisoft/yii2-composer": true
+    }
+  }
+}
