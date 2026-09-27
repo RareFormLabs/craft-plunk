@@ -45,4 +45,4 @@ For self-hosted Plunk installs, set **API Base URL** to the API root, without `/
 
 This adapter is intentionally focused on Craft mail delivery. It sends the subject, HTML/text body, sender, recipients, reply-to address, custom headers, and attachments from Craft through Plunk's transactional send API. Plunk templates, contact data, subscription state, workflows, and event tracking are not exposed as plugin settings in this release.
 
-Plunk's transactional API does not provide separate CC or BCC fields. Messages with CC or BCC recipients are rejected by the transport so those recipients are not silently dropped.
+Plunk's transactional API does not provide separate CC or BCC fields. It sends every recipient their own copy of the message, so CC and BCC recipients are delivered as additional recipients (the same way Plunk's own SMTP relay handles them). Every recipient receives the email, and BCC recipients stay hidden. CC recipients are not shown to each other in a `Cc` header, though, and Plunk creates or updates a contact for every recipient.

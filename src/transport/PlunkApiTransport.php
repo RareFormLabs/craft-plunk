@@ -9,7 +9,6 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\Exception\HttpTransportException;
-use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\AbstractApiTransport;
 use Symfony\Component\Mime\Address;
@@ -51,10 +50,6 @@ class PlunkApiTransport extends AbstractApiTransport
      */
     protected function doSendApi(SentMessage $sentMessage, Email $email, Envelope $envelope): ResponseInterface
     {
-        if ($email->getCc() !== [] || $email->getBcc() !== []) {
-            throw new TransportException('Plunk does not support separate CC or BCC recipients.');
-        }
-
         $response = $this->client->request('POST', sprintf('%s/v1/send', $this->apiBaseUrl), [
             'headers' => [
                 'Accept' => 'application/json',
@@ -89,13 +84,8 @@ class PlunkApiTransport extends AbstractApiTransport
 
     private function getPayload(Email $email, Envelope $envelope): array
     {
-        $recipients = array_map(
-            fn(Address $address): array => $this->addressPayload($address),
-            $this->getRecipients($email, $envelope)
-        );
-
         return array_filter([
-            'to' => $recipients,
+            'to' => $this->recipients($envelope),
             'from' => $this->addressPayload($envelope->getSender()),
             'reply' => $this->replyTo($email),
             'subject' => $email->getSubject(),
@@ -103,6 +93,26 @@ class PlunkApiTransport extends AbstractApiTransport
             'headers' => $this->headers($email),
             'attachments' => $this->attachments($email),
         ], fn($value): bool => $value !== null && $value !== []);
+    }
+
+    /**
+     * Plunk's send API has no CC or BCC fields: every address in `to` is sent its own
+     * copy of the message. CC and BCC recipients are therefore delivered as additional
+     * `to` recipients, matching how Plunk's own SMTP relay handles them. BCC recipients
+     * stay hidden because each copy is addressed to a single recipient.
+     */
+    private function recipients(Envelope $envelope): array
+    {
+        $recipients = [];
+
+        foreach ($envelope->getRecipients() as $address) {
+            $key = strtolower($address->getAddress());
+            if (!isset($recipients[$key])) {
+                $recipients[$key] = $this->addressPayload($address);
+            }
+        }
+
+        return array_values($recipients);
     }
 
     private function addressPayload(Address $address): array

@@ -10,7 +10,6 @@ use rareform\craftplunk\transport\PlunkApiTransport;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\Mailer\Exception\HttpTransportException;
-use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Part\DataPart;
@@ -121,20 +120,36 @@ class PlunkApiTransportTest extends TestCase
         $transport->send($email);
     }
 
-    public function testCcAndBccAreRejected(): void
+    public function testCcAndBccAreSentAsAdditionalRecipients(): void
     {
-        $transport = new PlunkApiTransport('sk_test', 'https://api.example.test', new MockHttpClient());
+        $requests = [];
+        $transport = $this->transport($requests);
         $email = (new Email())
             ->from('sender@example.com')
-            ->to('recipient@example.com')
-            ->cc('copy@example.com')
+            ->to(new Address('recipient@example.com', 'Recipient Name'))
+            ->cc(new Address('copy@example.com', 'Copy Name'), 'Recipient@example.com')
+            ->bcc('hidden@example.com')
             ->subject('Hello')
             ->html('<p>Hello</p>');
 
-        $this->expectException(TransportException::class);
-        $this->expectExceptionMessage('Plunk does not support separate CC or BCC recipients.');
-
         $transport->send($email);
+
+        self::assertCount(1, $requests);
+        $payload = $this->payload($requests[0]['options']);
+        self::assertSame([
+            [
+                'email' => 'recipient@example.com',
+                'name' => 'Recipient Name',
+            ],
+            [
+                'email' => 'copy@example.com',
+                'name' => 'Copy Name',
+            ],
+            [
+                'email' => 'hidden@example.com',
+            ],
+        ], $payload['to']);
+        self::assertArrayNotHasKey('headers', $payload);
     }
 
     private function transport(array &$requests): PlunkApiTransport
